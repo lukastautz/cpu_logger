@@ -38,7 +38,7 @@ void write_html(int data_fd, int write_to) {
 #endif
     double tmp;
     uint64 points = 0;
-    WRITE("<!DOCTYPE html><html><head><title>Load statistics</title><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>body,html{margin:0}#graph{position:absolute;inset:10px 0 2.9rem 0}#averages{position:absolute;bottom:.9rem;text-align:center;font-size:1.3rem;width:100vw}</style><link rel=\"stylesheet\" href=\"https://dygraphs.com/2.2.1/dist/dygraph.min.css\"><script src=\"https://dygraphs.com/2.2.1/dist/dygraph.min.js\"></script><script>function d(t,...a){return [new Date((t+1577836800)*1000),...a];}window.addEventListener(\"load\",function(){new Dygraph(document.getElementById(\"graph\"),[");
+    WRITE("<!DOCTYPE html><html><head><title>Load statistics</title><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><style>body,html{margin:0}#graph{position:absolute;inset:10px 0 2.9rem 0}#averages{position:absolute;bottom:.9rem;text-align:center;font-size:1.3rem;width:100vw}select{position:absolute;top:.3rem;left:.3rem;z-index:99}</style><link rel=\"stylesheet\" href=\"https://dygraphs.com/2.2.1/dist/dygraph.min.css\"><script src=\"https://dygraphs.com/2.2.1/dist/dygraph.min.js\"></script><script>function d(time,...data){return [new Date((time+1577836800)*1000),...data];}var graph;window.addEventListener(\"load\",function(){graph=new Dygraph(document.getElementById(\"graph\"),[");
     while (read(data_fd, &load, sizeof(load)) == sizeof(load)) {
         if (!is_first)
             WRITE(",");
@@ -77,7 +77,28 @@ void write_html(int data_fd, int write_to) {
     WRITE(",\"memory\"");
     memory_usage_percent /= (points ? points : 1);
 #endif
-    WRITE("],legend:\"follow\",legendFollowOffsetX:0,legendFollowOffsetY:0,title:\"Load statistics\",rollPeriod:0,customBars:false,ylabel:\"Usage (%)\",valueRange:[0,101],animatedZooms:true});});</script></head><body><div id=\"graph\"></div><div id=\"averages\"><b>Averages</b>: ");
+    WRITE("],legend:\"follow\",legendFollowOffsetX:0,legendFollowOffsetY:0,title:\"Load statistics\",rollPeriod:0,customBars:false,ylabel:\"Usage (%)\",valueRange:[0,101],animatedZooms:true});});function updateView(mode){for(var i=0;i<graph.visibility().length;++i){graph.setVisibility(i,mode==\"all\"||i==mode);}}</script></head><body><select onchange=\"updateView(this.value);\"><option value=\"all\">All</option>");
+    char i = '0';
+#ifdef FEATURE_LOAD
+    WRITE("<option value=\"");
+    write(write_to, &i, 1);
+    ++i;
+    WRITE("\">Load</option>");
+#endif
+#ifdef FEATURE_STEAL
+    WRITE("<option value=\"");
+    write(write_to, &i, 1);
+    ++i;
+    WRITE("\">Steal</option>");
+#endif
+#ifdef FEATURE_MEMORY
+    WRITE("<option value=\"");
+    write(write_to, &i, 1);
+    ++i;
+    WRITE("\">Memory</option>");
+#endif
+
+    WRITE("</select><div id=\"graph\"></div><div id=\"averages\"><b>Averages</b>: ");
     is_first = true;
 #ifdef FEATURE_LOAD
     write(write_to, "load: ", strlen("load: "));
