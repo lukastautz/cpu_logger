@@ -37,7 +37,7 @@ typedef struct jiffies_spent_s {
     uint64 total;
 } jiffies_spent; // 72 or 88 bytes
 
-jiffies_spent d1, d2, diff;
+jiffies_spent jiffies_start, diff;
 char buf[256];
 
 void get_current_jiffies(jiffies_spent *dest) {
@@ -76,12 +76,12 @@ void get_current_jiffies(jiffies_spent *dest) {
 
 void calculate_jiffies_diff(void) {
 #ifdef FEATURE_LOAD
-    diff.work = d2.work - d1.work;
+    diff.work -= jiffies_start.work;
 #endif
 #ifdef FEATURE_STEAL
-    diff.steal = d2.steal - d1.steal;
+    diff.steal -= jiffies_start.steal;
 #endif
-    diff.total = d2.total - d1.total;
+    diff.total -= jiffies_start.total;
 }
 
 #endif  // cpu
@@ -91,13 +91,12 @@ measured_load load;
 void measure_load(uint16 sleep_seconds) {
     double integer;
 #if defined(FEATURE_LOAD) || defined(FEATURE_STEAL)
-    get_current_jiffies(&d1);
-    load.time = 0;
+    get_current_jiffies(&jiffies_start);
     load.time = (uint32)(((uint32)((uint64)time(NULL) - 1577836800 /* 1.1.2020 */)) + (uint32)(sleep_seconds / 2));
 #endif
     sleep(sleep_seconds);
 #if defined(FEATURE_LOAD) || defined(FEATURE_STEAL)
-    get_current_jiffies(&d2);
+    get_current_jiffies(&diff);
     calculate_jiffies_diff();
 #ifdef FEATURE_LOAD
     double cpu_load_percent = ((double)diff.work / (double)diff.total) * 100.0;
