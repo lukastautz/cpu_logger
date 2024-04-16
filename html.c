@@ -1,5 +1,5 @@
 /*
-cpu_logger v1.0 <https://github.com/lukastautz/cpu_logger>
+cpu_logger <https://github.com/lukastautz/cpu_logger>
 Copyright (C) 2024 Lukas Tautz
 
 This program is free software: you can redistribute it and/or modify
@@ -150,6 +150,6 @@ int main(uint8 argc, char **argv) {
     int fd = open(argv[1], O_RDONLY);
     if (fd == -1)
         return 1;
-    write_html(fd, 1);
+    write_html(fd, STDOUT);
     close(fd);
 }

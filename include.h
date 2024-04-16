@@ -1,5 +1,5 @@
 /*
-cpu_logger v1.0 <https://github.com/lukastautz/cpu_logger>
+cpu_logger <https://github.com/lukastautz/cpu_logger>
 Copyright (C) 2024 Lukas Tautz
 
 This program is free software: you can redistribute it and/or modify
@@ -44,13 +44,16 @@ typedef u_int8_t   bool;
 
 #ifdef DEBUG
 // it's usually not needed in production, and as the goal is to be as small as possible, it's disabled by default
-#define PTR_IS_IN_BUF(ptr, buf, bufsize) (ptr < (buf + bufsize))
+#define PTR_IS_IN_BUF(ptr, buf) (ptr < (buf + sizeof(buf)))
 #else
-#define PTR_IS_IN_BUF(ptr, buf, bufsize) true
+#define PTR_IS_IN_BUF(ptr, buf) true
 #endif
 
 #define true    1
 #define false   0
+
+#define STDOUT 1
+#define STDERR 2
 
 typedef struct __attribute__((__packed__)) measured_load_s { // it has to be packed so that it is predictable and not dependant on the used compiler
     uint32 time; // seconds since 1.1.2020 (UTC)
@@ -72,7 +75,7 @@ uint8 itoa_fill(uint32 n, char *dest, uint8 fill_to);
 uint8 itoa(uint32 n, char *s);
 
 #define WRITE_STDERR(s) \
-    write(2, s, strlen(s))
+    write(STDERR, s, strlen(s))
 
 // html+avg
 #define _PRINT_PERCENT(name) \

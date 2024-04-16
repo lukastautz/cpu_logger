@@ -1,5 +1,5 @@
 /*
-cpu_logger v1.0 <https://github.com/lukastautz/cpu_logger>
+cpu_logger <https://github.com/lukastautz/cpu_logger>
 Copyright (C) 2024 Lukas Tautz
 
 This program is free software: you can redistribute it and/or modify
@@ -45,12 +45,12 @@ void get_current_jiffies(jiffies_spent *dest) {
     char *ptr = buf;
     dest->total = 0;
     int fd = open("/proc/stat", O_RDONLY);
-    if (fd == -1 || read(fd, buf, 256) < 128)
+    if (fd == -1 || read(fd, buf, sizeof(buf)) < 128)
         exit(9);
     close(fd);
     ptr += 3; // skip "cpu"
-    while (isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf, 256));
-    if (!PTR_IS_IN_BUF(ptr, buf, 256))
+    while (isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf));
+    if (!PTR_IS_IN_BUF(ptr, buf))
         exit(10);
 #ifndef MEASURE_GUEST_TIME
     for (uint8 i = 0; i < 8; ++i) {
@@ -60,11 +60,11 @@ void get_current_jiffies(jiffies_spent *dest) {
         tmp = atol(ptr);
         dest->total += tmp;
         memcpy((uint64 *)((uint64)dest + (uint64)(8 * i)), &tmp, 8);
-        while (!isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf, 256));
-        if (!PTR_IS_IN_BUF(ptr, buf, 256))
+        while (!isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf));
+        if (!PTR_IS_IN_BUF(ptr, buf))
             exit(10);
-        while (isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf, 256));
-        if (!PTR_IS_IN_BUF(ptr, buf, 256))
+        while (isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf));
+        if (!PTR_IS_IN_BUF(ptr, buf))
             exit(10);
     }
 #ifndef MEASURE_GUEST_TIME
@@ -110,18 +110,17 @@ void measure_load(uint16 sleep_seconds) {
 #endif
 #endif // cpu logging
 #ifdef FEATURE_MEMORY
-    char *ptr = buf + 10;
+    char *ptr = buf + strlen("MemTotal:");
     int fd = open("/proc/meminfo", O_RDONLY);
-    if (fd == -1 || read(fd, buf, 256) < 128)
+    if (fd == -1 || read(fd, buf, sizeof(buf)) < 128)
         exit(9);
     close(fd);
-    ptr = buf + 10;
-    while (isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf, 256));
+    while (isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf));
     uint32 total_memory = atol(ptr); // will overflow if more than 4 TiB of memory is installed (as it is in KiB)
-    while (*++ptr != 'F' && PTR_IS_IN_BUF(ptr, buf, 256)); // Free
-    while (*++ptr != 'A' && PTR_IS_IN_BUF(ptr, buf, 256)); // Available
+    while (*++ptr != 'F' && PTR_IS_IN_BUF(ptr, buf)); // Free
+    while (*++ptr != 'A' && PTR_IS_IN_BUF(ptr, buf)); // Available
     ptr += strlen("vailable ");
-    while (isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf, 256));
+    while (isspace(*++ptr) && PTR_IS_IN_BUF(ptr, buf));
     double memory_usage_percent = ((double)(total_memory - atol(ptr) /* total memory - available memory = used memory */) / total_memory) * 100.0;
     load.memory_usage_percent = (uint8)memory_usage_percent;
     load.memory_usage_percent_after_dot = (uint16)((memory_usage_percent - (double)load.memory_usage_percent) * 100.0);
