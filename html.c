@@ -141,15 +141,22 @@ void write_html(int data_fd, int write_to) {
 }
 
 int main(uint8 argc, char **argv) {
-    if (argc != 2 || !memcmp(argv[1], "-h", sizeof("-h")) || !memcmp(argv[1], "--help", sizeof("--help"))) {
+    uint64 maxima = 0;
+    if (argc == 1 || (argc != 2 && !(argc == 3 && (maxima = atol(argv[2])) != 0)) || !memcmp(argv[1], "-h", sizeof("-h")) || !memcmp(argv[1], "--help", sizeof("--help"))) {
         WRITE_STDERR("Usage: ");
         WRITE_STDERR(argv[0]);
-        WRITE_STDERR(" FILE\nThis program converts the binary file FILE generated with cpu_logger to a viewable HTML webpage.\n");
+        WRITE_STDERR(" FILE [MAXIMA]\nThis program converts the binary file FILE generated with cpu_logger to a viewable HTML webpage.\nWhen MAXIMA is specified and there are more than MAXIMA elements within FILE, only the last MAXIMA elements are displayed and used for average/maxima calculations.\n");
         exit(1);
     }
     int fd = open(argv[1], O_RDONLY);
     if (fd == -1)
         return 1;
+    if (maxima) {
+        int64 pos = lseek(fd, 0, SEEK_END) - (maxima * sizeof(measured_load));
+        if (pos < 0)
+            pos = 0; // there are less than MAXIMA elements in the file
+        lseek(fd, pos, SEEK_SET);
+    }
     write_html(fd, STDOUT);
     close(fd);
 }
