@@ -11,7 +11,7 @@ You can edit config.h if you don't want to save for example the used memory.
 On my machines it needs around 56 kB of memory (32 kB RSS), although that does depend on the configuration and the cpu architecture. (Note that depending on the program used to measure the used amount of memory, the displayed consumption may be higher as Linux file cache influences it greatly (unfortunately caching is hard/impossible to disable as O_DIRECT has too much disadvantages to be used).)
 
 ## Disk space needed
-It needs (with all features enabled) 10 bytes per interval. **If you for example log it every 10 seconds it needs approx. 30 MiB of disk space a year**. I recommend that you log to a ramdisk as 
+It needs (with all features enabled) 10 bytes per interval. **If you for example log it every 10 seconds it needs approx. 30 MiB of disk space a year**. I recommend that you log to a ramdisk as otherwise frequent disk accesses will happen.
 
 ## Binary size
 The binaries are linked against dietlibc 12 KiB big each.
