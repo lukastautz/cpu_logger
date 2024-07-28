@@ -1,5 +1,5 @@
 /*
-cpu_logger v1.0 <https://github.com/lukastautz/cpu_logger>
+cpu_logger <https://github.com/lukastautz/cpu_logger>
 Copyright (C) 2024 Lukas Tautz
 
 This program is free software: you can redistribute it and/or modify
