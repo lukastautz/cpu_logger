@@ -1,11 +1,11 @@
 /*
-cpu_logger <https://github.com/lukastautz/cpu_logger>
-Copyright (C) 2024 Lukas Tautz
+Copyright 2024 Lukas Tautz
 
-This program is free software: you can redistribute it and/or modify
+This file is part of cpu_logger.
+
+cpu_logger is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+the Free Software Foundation, version 3 of the License.
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
