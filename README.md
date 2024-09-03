@@ -24,7 +24,7 @@ It is recommended to use [dietlibc](https://www.fefe.de/dietlibc), as the static
 Simply call `cpu_logger LOG_FILE INTERVAL_IN_SECONDS` (after you built it and copied the binaries to /bin). There is also a systemd-service-file example (although it probably isn't the best possible). The daemon doesn't need to run as root, it only needs read access to /proc/meminfo and /proc/cpuinfo and write access to the log file.
 
 ## Generating the html file
-Simply call `cpu_logger_html LOG_FILE`. You can see a live example at layer7 [here](https://layer7.lukastautz.de/cpu.php). The html files have the disadvantage that as all data is contained the file can get quite large.
+Simply call `cpu_logger_html LOG_FILE`. You can see a live example at layer7 [here](https://0l7.0lt.de/cpu.php). The html files have the disadvantage that as all data is contained the file can get quite large.
 
 ## Why?
 The goal of cpu_logger is that it absolutely doesn't affect the system. I would say that with 52 KiB memory usage and near to no cpu usage (as it sleeps the most time), that goal is reached. It of course doesn't have as much functions as the bigger programs, but that wasn't the goal.
