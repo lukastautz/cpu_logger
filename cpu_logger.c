@@ -141,6 +141,7 @@ bool always_true_sleep(int time) {
     // 1: open() failed
     // 2: writing failed
     // 3: did not write all at first, and the second attempt did not succeed
+    // 4: invalid arguments
     // 9: reading /proc/stat or /proc/meminfo failed
     // 10: debug: memory out of buf
     // 99: can't happen
@@ -152,7 +153,7 @@ int main(int argc, char **argv) {
         WRITE_STDERR("Usage: ");
         WRITE_STDERR(argv[0]);
         WRITE_STDERR(" FILE INTERVAL\nThis program saves the measured load (as configured) every INTERVAL seconds to FILE in a binary format.\n");
-        exit(1);
+        return 4;
     }
     int fd = open(save_to = argv[1], O_APPEND | O_CREAT | O_WRONLY, 0644), write_return;
     if (fd == -1)

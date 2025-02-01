@@ -146,7 +146,7 @@ int main(uint8 argc, char **argv) {
         WRITE_STDERR("Usage: ");
         WRITE_STDERR(argv[0]);
         WRITE_STDERR(" FILE [MAXIMA]\nThis program converts the binary file FILE generated with cpu_logger to a viewable HTML webpage.\nWhen MAXIMA is specified and there are more than MAXIMA elements within FILE, only the last MAXIMA elements are displayed and used for average/maxima calculations.\n");
-        exit(1);
+        return 4;
     }
     int fd = open(argv[1], O_RDONLY);
     if (fd == -1)
@@ -159,4 +159,5 @@ int main(uint8 argc, char **argv) {
     }
     write_html(fd, STDOUT);
     close(fd);
+    return 0;
 }

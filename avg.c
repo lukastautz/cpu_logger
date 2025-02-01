@@ -122,7 +122,7 @@ int main(uint8 argc, char **argv) {
         WRITE_STDERR("Usage: ");
         WRITE_STDERR(argv[0]);
         WRITE_STDERR(" FILE [MAXIMA]\nThis program prints the average and max load (as configured) from the binary file FILE generated with cpu_logger.\nWhen MAXIMA is specified and there are more than MAXIMA elements within FILE, only the last MAXIMA elements are displayed and used for average/maxima calculations.\n");
-        exit(1);
+        return 4;
     }
     int fd = open(argv[1], O_RDONLY);
     if (fd == -1)
@@ -135,4 +135,5 @@ int main(uint8 argc, char **argv) {
     }
     calculate_and_print_averages(fd, STDOUT);
     close(fd);
+    return 0;
 }
