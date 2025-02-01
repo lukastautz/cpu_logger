@@ -108,6 +108,11 @@ void measure_load(uint16 sleep_seconds) {
     load.cpu_steal_percent = (uint8)cpu_steal_percent;
     load.cpu_steal_percent_after_dot = (uint16)((cpu_steal_percent - (double)load.cpu_steal_percent) * 100.0);
 #endif
+#ifdef FEATURE_IOWAIT
+    double iowait_percent = ((double)diff.iowait / (double)diff.total) * 100.0;
+    load.iowait_percent = (uint8)iowait_percent;
+    load.iowait_percent_after_dot = (uint16)((iowait_percent - (double)load.iowait_percent) * 100.0);
+#endif
 #endif // cpu logging
 #ifdef FEATURE_MEMORY
     char *ptr = buf + strlen("MemTotal:");

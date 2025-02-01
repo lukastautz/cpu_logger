@@ -65,6 +65,10 @@ typedef struct __attribute__((__packed__)) measured_load_s { // it has to be pac
     uint8 cpu_steal_percent : 7;
     uint8 cpu_steal_percent_after_dot : 7;
 #endif
+#ifdef FEATURE_IOWAIT
+    uint8 iowait_percent : 7;
+    uint8 iowait_percent_after_dot : 7;
+#endif
 #ifdef FEATURE_MEMORY
     uint8 memory_usage_percent : 7;
     uint8 memory_usage_percent_after_dot : 7;

@@ -1,5 +1,5 @@
 # cpu_logger
-cpu_logger is a minimal program written in C logging the load, steal and memory usage of a linux system. It can also generate html files with graphical statistics (using dygraphs) and averages.
+cpu_logger is a minimal program written in C logging the load, steal, memory usage and IOwait of a linux system. It can also generate html files with graphical statistics (using dygraphs) and averages.
 
 ## Internals
 cpu_logger saves the data in a binary file. It appends the data in the interval specified when calling cpu_logger.

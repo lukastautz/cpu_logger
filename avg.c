@@ -28,6 +28,9 @@ void calculate_and_print_averages(int data_fd, int write_to) {
 #ifdef FEATURE_STEAL
     double cpu_steal_percent = 0.0, cpu_steal_max_percent = 0.0;
 #endif
+#ifdef FEATURE_IOWAIT
+    double iowait_percent = 0.0, iowait_max_percent = 0.0;
+#endif
 #ifdef FEATURE_MEMORY
     double memory_usage_percent = 0.0, memory_usage_max_percent = 0.0;
 #endif
@@ -38,6 +41,9 @@ void calculate_and_print_averages(int data_fd, int write_to) {
 #endif
 #ifdef FEATURE_STEAL
         _ADD_AVG_MAX(cpu_steal);
+#endif
+#ifdef FEATURE_IOWAIT
+        _ADD_AVG_MAX(iowait);
 #endif
 #ifdef FEATURE_MEMORY
         _ADD_AVG_MAX(memory_usage);
@@ -52,6 +58,10 @@ void calculate_and_print_averages(int data_fd, int write_to) {
 #ifdef FEATURE_STEAL
     cpu_steal_percent /= (points ? points : 1);
     WRITE("Steal\t\t");
+#endif
+#ifdef FEATURE_IOWAIT
+    iowait_percent /= (points ? points : 1);
+    WRITE("IOWait\t\t");
 #endif
 #ifdef FEATURE_MEMORY
     memory_usage_percent /= (points ? points : 1);
@@ -69,6 +79,12 @@ void calculate_and_print_averages(int data_fd, int write_to) {
     _PRINT_PERCENT(cpu_steal_percent);
     is_first = false;
 #endif
+#ifdef FEATURE_IOWAIT
+    if (!is_first)
+        WRITE("\t");
+    _PRINT_PERCENT(iowait_percent);
+    is_first = false;
+#endif
 #ifdef FEATURE_MEMORY
     if (!is_first)
         WRITE("\t");
@@ -84,6 +100,12 @@ void calculate_and_print_averages(int data_fd, int write_to) {
     if (!is_first)
         WRITE("\t");
     _PRINT_PERCENT(cpu_steal_max_percent);
+    is_first = false;
+#endif
+#ifdef FEATURE_IOWAIT
+    if (!is_first)
+        WRITE("\t");
+    _PRINT_PERCENT(iowait_max_percent);
     is_first = false;
 #endif
 #ifdef FEATURE_MEMORY
