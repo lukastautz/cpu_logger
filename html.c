@@ -1,5 +1,5 @@
 /*
-Copyright 2024 Lukas Tautz
+Copyright 2024-2025 Lukas Tautz
 
 This file is part of cpu_logger.
 
