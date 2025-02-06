@@ -33,6 +33,9 @@ void write_html(int data_fd, int write_to) {
 #ifdef FEATURE_STEAL
     double cpu_steal_percent = 0.0, cpu_steal_max_percent = 0.0;
 #endif
+#ifdef FEATURE_IOWAIT
+    double iowait_percent = 0.0, iowait_max_percent = 0.0;
+#endif
 #ifdef FEATURE_MEMORY
     double memory_usage_percent = 0.0, memory_usage_max_percent = 0.0;
 #endif
@@ -56,6 +59,11 @@ void write_html(int data_fd, int write_to) {
         _PRINT_DOUBLE(cpu_steal);
         _ADD_AVG_MAX(cpu_steal);
 #endif
+#ifdef FEATURE_IOWAIT
+        WRITE(",");
+        _PRINT_DOUBLE(iowait);
+        _ADD_AVG_MAX(iowait);
+#endif
 #ifdef FEATURE_MEMORY
         WRITE(",");
         _PRINT_DOUBLE(memory_usage);
@@ -72,6 +80,10 @@ void write_html(int data_fd, int write_to) {
 #ifdef FEATURE_STEAL
     WRITE(",\"steal\"");
     cpu_steal_percent /= (points ? points : 1);
+#endif
+#ifdef FEATURE_STEAL
+    WRITE(",\"iowait\"");
+    iowait_percent /= (points ? points : 1);
 #endif
 #ifdef FEATURE_MEMORY
     WRITE(",\"memory\"");
@@ -90,6 +102,12 @@ void write_html(int data_fd, int write_to) {
     write(write_to, &i, 1);
     ++i;
     WRITE("\">Steal</option>");
+#endif
+#ifdef FEATURE_IOWAIT
+    WRITE("<option value=\"");
+    write(write_to, &i, 1);
+    ++i;
+    WRITE("\">IOwait</option>");
 #endif
 #ifdef FEATURE_MEMORY
     WRITE("<option value=\"");
@@ -112,6 +130,13 @@ void write_html(int data_fd, int write_to) {
     _PRINT_PERCENT(cpu_steal_percent);
     is_first = false;
 #endif
+#ifdef FEATURE_IOWAIT
+    if (!is_first)
+        write(write_to, "; ", strlen("; "));
+    write(write_to, "iowait: ", strlen("iowait: "));
+    _PRINT_PERCENT(iowait_percent);
+    is_first = false;
+#endif
 #ifdef FEATURE_MEMORY
     if (!is_first)
         write(write_to, "; ", strlen("; "));
@@ -129,6 +154,13 @@ void write_html(int data_fd, int write_to) {
         write(write_to, "; ", strlen("; "));
     write(write_to, "steal: ", strlen("steal: "));
     _PRINT_PERCENT(cpu_steal_max_percent);
+    is_first = false;
+#endif
+#ifdef FEATURE_IOWAIT
+    if (!is_first)
+        write(write_to, "; ", strlen("; "));
+    write(write_to, "iowait: ", strlen("iowait: "));
+    _PRINT_PERCENT(iowait_max_percent);
     is_first = false;
 #endif
 #ifdef FEATURE_MEMORY

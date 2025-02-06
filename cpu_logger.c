@@ -81,6 +81,9 @@ void calculate_jiffies_diff(void) {
 #ifdef FEATURE_STEAL
     diff.steal -= jiffies_start.steal;
 #endif
+#ifdef FEATURE_IOWAIT
+    diff.iowait -= jiffies_start.iowait;
+#endif
     diff.total -= jiffies_start.total;
 }
 
@@ -90,12 +93,12 @@ measured_load load;
 
 void measure_load(uint16 sleep_seconds) {
     double integer;
-#if defined(FEATURE_LOAD) || defined(FEATURE_STEAL)
+#if defined(FEATURE_LOAD) || defined(FEATURE_STEAL) || defined(FEATURE_IOWAIT)
     get_current_jiffies(&jiffies_start);
     load.time = (uint32)(((uint32)((uint64)time(NULL) - 1577836800 /* 1.1.2020 */)) + (uint32)(sleep_seconds / 2));
 #endif
     sleep(sleep_seconds);
-#if defined(FEATURE_LOAD) || defined(FEATURE_STEAL)
+#if defined(FEATURE_LOAD) || defined(FEATURE_STEAL) || defined(FEATURE_IOWAIT)
     get_current_jiffies(&diff);
     calculate_jiffies_diff();
 #ifdef FEATURE_LOAD
