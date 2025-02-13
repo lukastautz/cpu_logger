@@ -81,7 +81,7 @@ void write_html(int data_fd, int write_to) {
     WRITE(",\"steal\"");
     cpu_steal_percent /= (points ? points : 1);
 #endif
-#ifdef FEATURE_STEAL
+#ifdef FEATURE_IOWAIT
     WRITE(",\"iowait\"");
     iowait_percent /= (points ? points : 1);
 #endif
